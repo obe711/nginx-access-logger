@@ -1,0 +1,21 @@
+{
+  "name": "access-api",
+  "version": "1.0.0",
+  "description": "Access log monitor",
+  "main": "index.js",
+  "author": "Ben Klopfenstein",
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/obe711/nginx-access-logger.git"
+  },
+  "scripts": {
+    "dev": "nodemon index.js siteName.com"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "mongoose": "^5.13.0",
+    "tail": "^2.2.3"
+  }
+}
