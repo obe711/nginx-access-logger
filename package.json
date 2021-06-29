@@ -16,6 +16,15 @@
   "scripts": {
     "dev": "nodemon index.js siteName.com"
   },
+  "keywords": [
+    "node",
+    "node.js",
+    "nginx",
+    "forge",
+    "log",
+    "mongodb",
+    "mongoose"
+  ],
   "dependencies": {
     "dotenv": "^10.0.0",
     "mongoose": "^5.13.0",
