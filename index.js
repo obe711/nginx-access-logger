@@ -1,7 +1,15 @@
+
+/*!
+ * nginx-access-logger
+ * Copyright(c) 2021 Obediah Benjamin Klopfenstein <obe711@gmail.com>
+ * MIT Licensed
+ */
+
 "use strict";
+
 require("dotenv").config();
-const DBconnect = require("./connection/DB");
 const fs = require('fs');
+const DBconnect = require("./connection/DB");
 const Tail = require('tail').Tail;
 
 
