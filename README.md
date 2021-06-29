@@ -1,6 +1,6 @@
 # nginx-access-logger
 
-Log Nginx requests to MongoDB database. This utility was created for a [VScode](https://code.visualstudio.com) plugin I created to provision and monitor my servers on [Digital Ocean](https://www.digitalocean.com) and works well with [Forge](https://forge.laravel.com), a server management tool by [Laravel](https://laravel.com). It can also be used on it's own with the correct [Manual Setup](#setup).
+Log Nginx requests to MongoDB database. This utility was created for a [VScode](https://code.visualstudio.com) plugin I created to provision and monitor my servers on [Digital Ocean](https://www.digitalocean.com) and works well with [Forge](https://forge.laravel.com), a server management tool by [Laravel](https://laravel.com). It can also be used on it's own with the correct [Manual Setup](#manual-setup).
 
 ## Installation
 
