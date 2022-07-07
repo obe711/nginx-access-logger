@@ -17,7 +17,7 @@ const Tail = require('tail').Tail;
 
 (async () => {
     /* Mongoose Connection */
-    const DB = await DBconnect("mongodb://localhost:27017/forgeApi");
+    const DB = await DBconnect(process.env.MONGODB_URL);
 
     /* Access log path */
     const accessLog = await getSiteLogFilePath();
