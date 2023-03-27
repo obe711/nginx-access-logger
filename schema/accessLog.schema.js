@@ -8,6 +8,8 @@ const accessLogSchema = new mongoose.Schema({
     host: { type: String, },
     hostname: { type: String, },
     request: { type: String, },
+    requestUri: { type: String },
+    uri: { type: String },
     status: { type: Number, },
     bytes: { type: Number, },
     referer: { type: String, },

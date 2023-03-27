@@ -53,6 +53,7 @@ http {
                         '"ts":"[$time_local]",'
                         '"method":"$request_method",'
                         '"host":"$host", "hostname":"$hostname",'
+                        '"requestUri":"$request_uri", "uri":"$uri"'
                         '"request":"$request", "status":$status, "bytes":$body_bytes_sent,'
                         '"referer":"$http_referer", "agent":"$http_user_agent",'
                         '"duration":{"request":"$request_time",'
