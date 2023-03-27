@@ -60,19 +60,27 @@ const Tail = require('tail').Tail;
  * @returns {string} log file path
  */
 async function getSiteLogFilePath() {
-    const nodeArguments = process.argv.slice(2);
 
-    if (nodeArguments.length < 1) {
-        console.error("Missing Site argument");
-        process.exit(9)
+    let logPath;
+
+    if (process.env?.ACCESS_LOG_PATH) {
+        logPath = process.env.ACCESS_LOG_PATH
+    } else {
+
+        const nodeArguments = process.argv.slice(2);
+
+        if (nodeArguments.length < 1) {
+            console.error("Missing Site argument");
+            process.exit(9)
+        }
+
+        if (nodeArguments.length > 1) {
+            console.error("Too many arguments. Only pass site name");
+            process.exit(9)
+        }
+
+        logPath = process.env.NODE_ENV === "development" ? `./log/${nodeArguments[0]}-access.log` : `/var/log/nginx/${nodeArguments[0]}-access.log`;
     }
-
-    if (nodeArguments.length > 1) {
-        console.error("Too many arguments. Only pass site name");
-        process.exit(9)
-    }
-
-    const logPath = process.env.NODE_ENV === "development" ? `./log/${nodeArguments[0]}-access.log` : `/var/log/nginx/${nodeArguments[0]}-access.log`;
 
     try {
         await fs.promises.access(logPath);
