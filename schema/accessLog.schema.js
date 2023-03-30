@@ -14,6 +14,7 @@ const accessLogSchema = new mongoose.Schema({
     bytes: { type: Number, },
     referer: { type: String, },
     agent: { type: String, },
+    args: { type: String },
     duration: {
         request: { type: Number, default: 0 },
         connect: { type: Number, default: 0 },
