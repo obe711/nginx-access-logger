@@ -9,31 +9,33 @@
 "use strict";
 
 require("dotenv").config();
-const fs = require('fs');
+const fs = require('node:fs');
 const DBconnect = require("./connection/DB");
 const Tail = require('tail').Tail;
+const config = require("./config/config");
+const logger = require("./config/logger");
 
 
 
 (async () => {
     /* Mongoose Connection */
-    const DB = await DBconnect(process.env.MONGODB_URL);
+    const DB = await DBconnect();
 
     /* Access log path */
     const accessLog = await getSiteLogFilePath();
 
     /* Follow Log */
-    const tail = new Tail(accessLog);
+    const tail = new Tail(accessLog, { logger });
 
     /* Logfile change */
     tail.on("line", logAccess);
 
     /* Error event */
     tail.on('error', (err) => {
-        console.error(err)
+        logger.error(err);
     });
 
-    console.log("Logging", accessLog);
+    logger.info(`Logging - ${accessLog}`);
 
     /**
      * Log access data to DB
@@ -57,36 +59,35 @@ const Tail = require('tail').Tail;
 /**
  * Return the path of the logfile
  * 
- * @returns {string} log file path
+ * @returns {Promise<string>} log file path
  */
 async function getSiteLogFilePath() {
 
     let logPath;
 
-    if (process.env?.ACCESS_LOG_PATH) {
-        logPath = process.env.ACCESS_LOG_PATH
+    if (config.nginx.siteName) {
+        logPath = config.nginx.logDir + config.nginx.siteName + "-access.log";
     } else {
-
         const nodeArguments = process.argv.slice(2);
 
         if (nodeArguments.length < 1) {
-            console.error("Missing Site argument");
+            logger.error("Missing Site argument");
             process.exit(9)
         }
 
         if (nodeArguments.length > 1) {
-            console.error("Too many arguments. Only pass site name");
+            logger.error("Too many arguments. Only pass site name");
             process.exit(9)
         }
 
-        logPath = process.env.NODE_ENV === "development" ? `./log/${nodeArguments[0]}-access.log` : `/var/log/nginx/${nodeArguments[0]}-access.log`;
+        logPath = config.nginx.logDir + nodeArguments[0] + "-access.log";
     }
 
     try {
         await fs.promises.access(logPath);
         return logPath;
     } catch (error) {
-        console.error("Log file missing");
+        logger.error("Log file missing");
         process.exit(9)
     }
 }
