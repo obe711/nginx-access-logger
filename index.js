@@ -14,7 +14,7 @@ const DBconnect = require("./connection/DB");
 const Tail = require('tail').Tail;
 const config = require("./config/config");
 const logger = require("./config/logger");
-
+const nablaTx = require("../mt-nabla-tx");
 
 
 (async () => {
@@ -22,10 +22,13 @@ const logger = require("./config/logger");
     const DB = await DBconnect();
 
     /* Access log path */
-    const accessLog = await getSiteLogFilePath();
+    const { logPath, host } = await getSiteLogFilePath();
+
+    /* Nabla Data Socket */
+    const nabla = nablaTx.site({ host });
 
     /* Follow Log */
-    const tail = new Tail(accessLog, { logger });
+    const tail = new Tail(logPath, { logger });
 
     /* Logfile change */
     tail.on("line", logAccess);
@@ -35,7 +38,7 @@ const logger = require("./config/logger");
         logger.error(err);
     });
 
-    logger.info(`Logging - ${accessLog}`);
+    logger.info(`Logging - ${logPath}`);
 
     /**
      * Log access data to DB
@@ -49,6 +52,7 @@ const logger = require("./config/logger");
 
         if (!exists) {
             await DB.Access.log(newLog);
+            nabla.accessLog(newLog);
         }
     }
 })();
@@ -64,9 +68,10 @@ const logger = require("./config/logger");
 async function getSiteLogFilePath() {
 
     let logPath;
+    let host;
 
     if (config.nginx.siteName) {
-        logPath = config.nginx.logDir + config.nginx.siteName + "-access.log";
+        host = config.nginx.siteName;
     } else {
         const nodeArguments = process.argv.slice(2);
 
@@ -80,12 +85,14 @@ async function getSiteLogFilePath() {
             process.exit(9)
         }
 
-        logPath = config.nginx.logDir + nodeArguments[0] + "-access.log";
+        host = nodeArguments[0];
     }
+
+    logPath = config.nginx.logDir + host + "-access.log";
 
     try {
         await fs.promises.access(logPath);
-        return logPath;
+        return { logPath, host };
     } catch (error) {
         logger.error("Log file missing");
         process.exit(9)
