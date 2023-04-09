@@ -14,7 +14,9 @@ const DBconnect = require("./connection/DB");
 const Tail = require('tail').Tail;
 const config = require("./config/config");
 const logger = require("./config/logger");
-const nablaTx = require("../mt-nabla-tx");
+const NablaTx = require("../mt-nabla-tx");
+
+const nablaTx = new NablaTx({ logger, port: config.nablaPort });
 
 
 (async () => {
