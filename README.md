@@ -76,13 +76,13 @@ http {
 Running locally:
 
 ```bash
-yarn dev
+SITE=mywebsite.com yarn dev
 ```
 
 or
 
 ```bash
-npm run dev
+SITE=mywebsite.com npm run dev
 ```
 
 Running in production (requires Daemon):
