@@ -11,7 +11,9 @@ const envVarsSchema = Joi.object()
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
     MONGODB_DATABASE: Joi.string().required().description('Mongo DB Database'),
     SITE_NAME: Joi.string().description('Site name'),
-    ACCESS_LOG_DIR: Joi.string().required().description('NGINX Log directory'),
+    ACCESS_LOG_DIR: Joi.string().description('NGINX Log directory'),
+    ACCESS_LOG_FILE_PATH: Joi.string().description('NGINX Log file'),
+    DAYS_TO_EXPIRE: Joi.number().default(15),
   })
   .unknown();
 
@@ -38,9 +40,11 @@ module.exports = {
       socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
       family: 4 // Use IPv4, skip trying IPv6
     },
+    expireInDays: envVars?.DAYS_TO_EXPIRE
   },
   nginx: {
     siteName: envVars?.SITE_NAME,
-    logDir: envVars.ACCESS_LOG_DIR + "/"
+    logDir: envVars.ACCESS_LOG_DIR + "/",
+    accessLogFilePath: envVars?.ACCESS_LOG_FILE_PATH
   }
 };

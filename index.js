@@ -14,7 +14,7 @@ const DBconnect = require("./connection/DB");
 const Tail = require('tail').Tail;
 const config = require("./config/config");
 const logger = require("./config/logger");
-const NablaTx = require("../mt-nabla-tx");
+const NablaTx = require("mt-nabla-tx");
 
 const nablaTx = new NablaTx({ logger, port: config.nablaPort });
 
@@ -90,7 +90,7 @@ async function getSiteLogFilePath() {
         host = nodeArguments[0];
     }
 
-    logPath = config.nginx.logDir + host + "-access.log";
+    logPath = config.nginx?.accessLogFilePath || config.nginx.logDir + host + "-access.log";
 
     try {
         await fs.promises.access(logPath);

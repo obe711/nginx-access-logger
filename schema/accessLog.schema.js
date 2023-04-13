@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const config = require("../config/config");
+
 
 const accessLogSchema = new mongoose.Schema({
     tsId: { type: String, unique: true },
@@ -20,6 +22,11 @@ const accessLogSchema = new mongoose.Schema({
         connect: { type: Number, default: 0 },
         header: { type: Number, default: 0 },
         response: { type: Number, default: 0 },
+    },
+    expireAt: {
+        type: Date,
+        default: Date.now,
+        expires: 86400 * config.mongoose.expireInDays
     }
 
 }, { timestamps: true });
