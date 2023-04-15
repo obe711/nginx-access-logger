@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon index.js",
-    "start:production": "pm2 start ecosystem.config.json",
+    "start:production": "pm2 start $CONFIG_FILE",
     "dev": "cross-env NODE_ENV=development nodemon ./index.js $SITE"
   },
   "keywords": [
