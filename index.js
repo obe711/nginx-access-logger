@@ -49,6 +49,7 @@ const nablaTx = new NablaTx({ logger, port: config.nablaPort });
      */
     async function logAccess(data) {
         const newLog = JSON.parse(data.trim())[0];
+        if (newLog.uri === "/nabla") return;
 
         const exists = await DB.Access.check(newLog);
 
