@@ -25,6 +25,7 @@ const nablaTx = new NablaTx({ logger, port: config.nablaPort });
 
     /* Access log path */
     const { logPath, host } = await getSiteLogFilePath();
+    logger.info(`Access log: ${logPath}`)
 
     /* Nabla Data Socket */
     const nabla = nablaTx.site({ host });
