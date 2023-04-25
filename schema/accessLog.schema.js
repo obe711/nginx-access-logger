@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const config = require("../config/config");
 
-
 const accessLogSchema = new mongoose.Schema({
     tsId: { type: String, unique: true },
     address: { type: String, },
@@ -26,12 +25,15 @@ const accessLogSchema = new mongoose.Schema({
     expireAt: {
         type: Date,
         default: Date.now,
-        expires: 86400 * config.mongoose.expireInDays
     }
-
 }, { timestamps: true });
 
+accessLogSchema.index({ expireAt: 1 }, { expires: 10 });
+
 accessLogSchema.statics.log = function (logData) {
+    const expireAtDate = new Date();
+    expireAtDate.setDate(expireAtDate.getDate() + config.mongoose.expireInDays);
+    Object.assign(logData, { expireAt: expireAtDate.toISOString().split("T")[0] })
     return this.create(logData);
 }
 
