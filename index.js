@@ -16,7 +16,9 @@ const config = require("./config/config");
 const logger = require("./config/logger");
 const NablaTx = require("mt-nabla-tx");
 
-const nablaTx = new NablaTx({ logger, port: config.nablaPort });
+const devLogger = config.env !== "production" ? logger : null
+
+const nablaTx = new NablaTx({ logger: devLogger, port: config.nablaPort });
 
 
 (async () => {
@@ -31,7 +33,7 @@ const nablaTx = new NablaTx({ logger, port: config.nablaPort });
     const nabla = nablaTx.site({ host });
 
     /* Follow Log */
-    const tail = new Tail(logPath, { logger });
+    const tail = new Tail(logPath);
 
     /* Logfile change */
     tail.on("line", logAccess);
