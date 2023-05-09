@@ -1,6 +1,6 @@
 {
   "name": "nginx-access-logger",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Access log monitor",
   "main": "index.js",
   "author": "Obediah Klopfenstein",
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon index.js",
-    "start:production": "pm2 start $CONFIG_FILE",
+    "start:production": "pm2 start ecosystem.config.json",
     "dev": "cross-env NODE_ENV=development nodemon ./index.js $SITE"
   },
   "keywords": [
