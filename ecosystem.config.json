@@ -10,7 +10,8 @@
       "env": {
         "NODE_ENV": "production"
       },
-      "log_type": "json"
+      "log_type": "json",
+      "merge_logs": true
     }
   ]
 }
