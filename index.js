@@ -57,6 +57,8 @@ const nablaTx = new NablaTx({ logger: devLogger, port: config.nablaPort });
         const exists = await DB.Access.check(newLog);
 
         if (!exists) {
+            const randomId = `${Math.floor(1000 + Math.random() * 9000)}`;
+            newLog.tsId = newLog.tsId + randomId;
             await DB.Access.log(newLog);
             nabla.accessLog(newLog);
         }
