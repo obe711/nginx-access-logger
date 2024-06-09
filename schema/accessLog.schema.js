@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const config = require("../config/config");
 
 const accessLogSchema = new mongoose.Schema({
-    tsId: { type: String, unique: true },
+    tsId: { type: String },
     address: { type: String, },
     ts: { type: String, },
     method: { type: String, },
@@ -11,16 +11,16 @@ const accessLogSchema = new mongoose.Schema({
     request: { type: String, },
     requestUri: { type: String },
     uri: { type: String },
-    status: { type: Number, },
-    bytes: { type: Number, },
+    status: { type: String, },
+    bytes: { type: String, },
     referer: { type: String, },
     agent: { type: String, },
     args: { type: String },
     duration: {
-        request: { type: Number, default: 0 },
-        connect: { type: Number, default: 0 },
-        header: { type: Number, default: 0 },
-        response: { type: Number, default: 0 },
+        request: { type: String, default: "0" },
+        connect: { type: String, default: "0" },
+        header: { type: String, default: "0" },
+        response: { type: String, default: "0" },
     },
     expireAt: {
         type: Date,

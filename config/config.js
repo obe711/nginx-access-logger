@@ -11,7 +11,6 @@ const envVarsSchema = Joi.object()
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
     MONGODB_DATABASE: Joi.string().required().description('Mongo DB Database'),
     SITE_NAME: Joi.string().description('Site name'),
-    ACCESS_LOG_DIR: Joi.string().description('NGINX Log directory'),
     ACCESS_LOG_FILE_PATH: Joi.string().description('NGINX Log file'),
     DAYS_TO_EXPIRE: Joi.number().default(15),
   })
@@ -27,7 +26,7 @@ module.exports = {
   env: envVars.NODE_ENV,
   nablaPort: envVars.NABLA_PORT,
   mongoose: {
-    url: envVars.MONGODB_URL + '/' + envVars.MONGODB_DATABASE + (envVars.NODE_ENV === 'test' ? '-test' : ''),
+    url: envVars.MONGODB_URL + '/' + envVars.MONGODB_DATABASE,
     database: envVars.MONGODB_DATABASE,
     options: {
     },
@@ -35,7 +34,6 @@ module.exports = {
   },
   nginx: {
     siteName: envVars?.SITE_NAME,
-    logDir: envVars.ACCESS_LOG_DIR + "/",
     accessLogFilePath: envVars?.ACCESS_LOG_FILE_PATH
   }
 };

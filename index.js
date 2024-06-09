@@ -25,15 +25,18 @@ const nablaTx = new NablaTx({ logger: devLogger, port: config.nablaPort });
     /* Mongoose Connection */
     const DB = await DBconnect();
 
-    /* Access log path */
-    const { logPath, host } = await getSiteLogFilePath();
-    logger.info(`Access log: ${logPath}`)
+    try {
+        await fs.promises.access(config.nginx.accessLogFilePath);
+    } catch (error) {
+        logger.error("Log file missing or invalid user permission");
+        process.exit(9)
+    }
 
     /* Nabla Data Socket */
-    const nabla = nablaTx.site({ host });
+    const nabla = nablaTx.site({ host: config.nginx.siteName });
 
     /* Follow Log */
-    const tail = new Tail(logPath);
+    const tail = new Tail(config.nginx.accessLogFilePath);
 
     /* Logfile change */
     tail.on("line", logAccess);
@@ -43,7 +46,7 @@ const nablaTx = new NablaTx({ logger: devLogger, port: config.nablaPort });
         logger.error(err);
     });
 
-    logger.info(`Logging - ${logPath}`);
+    logger.info(`Logging - ${config.nginx.accessLogFilePath}`);
 
     /**
      * Log access data to DB
@@ -51,63 +54,20 @@ const nablaTx = new NablaTx({ logger: devLogger, port: config.nablaPort });
      * @param {string} data 
      */
     async function logAccess(data) {
-        const newLog = JSON.parse(data.trim())[0];
-        if (newLog.uri === "/nabla") return;
+        try {
+            const newLog = JSON.parse(data.trim())[0];
+            if (newLog.uri === "/nabla") return;
 
-        const exists = await DB.Access.check(newLog);
+            const exists = await DB.Access.check(newLog);
 
-        if (!exists) {
-            const randomId = `${Math.floor(1000 + Math.random() * 9000)}`;
-            newLog.tsId = newLog.tsId + randomId;
-            await DB.Access.log(newLog);
-            nabla.accessLog(newLog);
+            if (!exists) {
+                const randomId = `${Math.floor(1000 + Math.random() * 9000)}`;
+                newLog.tsId = newLog.tsId + randomId;
+                await DB.Access.log(newLog);
+                nabla.accessLog(newLog);
+            }
+        } catch (err) {
+            logger.error(`${err.message}`);
         }
     }
 })();
-
-
-/* Global functions */
-
-/**
- * Return the path of the logfile
- * 
- * @returns {Promise<string>} log file path
- */
-async function getSiteLogFilePath() {
-
-    let logPath;
-    let host;
-
-    if (config.nginx.siteName) {
-        host = config.nginx.siteName;
-    } else {
-        const nodeArguments = process.argv.slice(2);
-
-        if (nodeArguments.length < 1) {
-            logger.error("Missing Site argument");
-            process.exit(9)
-        }
-
-        if (nodeArguments.length > 1) {
-            logger.error("Too many arguments. Only pass site name");
-            process.exit(9)
-        }
-
-        host = nodeArguments[0];
-    }
-
-    logPath = config.nginx?.accessLogFilePath || config.nginx.logDir + host + "-access.log";
-
-    try {
-        await fs.promises.access(logPath);
-        return { logPath, host };
-    } catch (error) {
-        logger.error("Log file missing");
-        process.exit(9)
-    }
-}
-
-
-
-
-
