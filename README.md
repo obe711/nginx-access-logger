@@ -47,7 +47,7 @@ To do this, create a symlink to the nginx-access-logger config file.
 cd nginx-conf
 
 # Create the symlink
-ln -s $(pwd)/nginx-access-logger.conf /etc/nginx/conf.d/nginx-access-logger.conf
+sudo ln -s $(pwd)/nginx-access-logger.conf /etc/nginx/conf.d/nginx-access-logger.conf
 
 # Test the NGINX configuration
 sudo nginx -t
